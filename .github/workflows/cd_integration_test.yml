@@ -1,7 +1,11 @@
-name: CD - Integration Tests with Docker
+name: CD - Testes de Integração
 
 on:
   push:
+    branches:
+      - develop
+      - main
+  pull_request:
     branches:
       - develop
       - main
@@ -14,8 +18,8 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_USER: checkpoint_user
-          POSTGRES_PASSWORD: checkpoint_password
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: checkpoint_db
         options: >-
           --health-cmd pg_isready
@@ -26,35 +30,35 @@ jobs:
           - 5432:5432
     
     steps:
-      - name: Checkout code
+      - name: Checkout código
         uses: actions/checkout@v4
       
-      - name: Set up Java 17
-        uses: actions/setup-java@v4
+      - name: Configurar Java 17
+        uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
       
-      - name: Run integration tests
+      - name: Build Maven
+        run: mvn clean package -DskipTests
+      
+      - name: Executar testes de integração
         env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_NAME: checkpoint_db
+          DB_USER: postgres
+          DB_PASSWORD: postgres
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/checkpoint_db
-          SPRING_DATASOURCE_USERNAME: checkpoint_user
-          SPRING_DATASOURCE_PASSWORD: checkpoint_password
-        run: mvn verify -B
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: postgres
+        run: mvn verify
       
-      - name: Upload test results
+      - name: Upload relatório de testes
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
+          name: test-reports
           path: target/surefire-reports/
-          retention-days: 30
-      
-      - name: Upload coverage reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-reports
-          path: target/site/
           retention-days: 30
