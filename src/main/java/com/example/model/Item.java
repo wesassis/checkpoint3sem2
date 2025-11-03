@@ -1,9 +1,10 @@
 package com.example.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "itens")
+@Table(name = "items")
 public class Item {
 
     @Id
@@ -11,6 +12,7 @@ public class Item {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "Nome nao pode ser vazio")
     private String nome;
 
     @Column(length = 500)

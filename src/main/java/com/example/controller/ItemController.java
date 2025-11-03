@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.model.Item;
 import com.example.repository.ItemRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class ItemController {
      * POST /api/itens - Criar um novo item
      */
     @PostMapping
-    public ResponseEntity<Item> criarItem(@RequestBody Item item) {
+    public ResponseEntity<Item> criarItem(@Valid @RequestBody Item item) {
         Item novoItem = itemRepository.save(item);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoItem);
     }
@@ -52,11 +53,11 @@ public class ItemController {
      * PUT /api/itens/{id} - Atualizar um item
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Item> atualizarItem(@PathVariable Long id, @RequestBody Item itemAtualizado) {
+    public ResponseEntity<Item> atualizarItem(@PathVariable Long id, @Valid @RequestBody Item itemAtualizado) {
         Optional<Item> itemExistente = itemRepository.findById(id);
         if (itemExistente.isPresent()) {
             Item item = itemExistente.get();
-            if (itemAtualizado.getNome() != null) {
+            if (itemAtualizado.getNome() != null && !itemAtualizado.getNome().isBlank()) {
                 item.setNome(itemAtualizado.getNome());
             }
             if (itemAtualizado.getDescricao() != null) {
