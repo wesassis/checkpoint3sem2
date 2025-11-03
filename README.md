@@ -1,243 +1,145 @@
-# Checkpoint API
+# Checkpoint API 3/3
 
-Aplicação Java Spring Boot com CRUD de Itens, PostgreSQL, Docker e CI/CD.
+Aplicação Java Spring Boot com CRUD de Itens, utilizando PostgreSQL, Docker e um pipeline de CI/CD com GitHub Actions.
 
+## ⚙️ Tecnologias
 
+-   Java 17+
+-   Spring Boot 3.2.0
+-   PostgreSQL
+-   Docker
+-   Maven
+-   GitHub Actions
 
-## 📋 Tecnologias## � Começar Rápido
+## ⚡ Começar Rápido
 
+A API estará disponível em: `http://localhost:8080`
 
+### 1. Com Docker Compose (Recomendado)
 
-Java 17+ | Spring Boot 3.2.0 | PostgreSQL | Docker | Maven | GitHub Actions### 1. Com Docker Compose (Recomendado)
+Este método sobe a API e o banco de dados PostgreSQL automaticamente.
 
 ```bash
-
-## ⚡ Começar Rápidodocker-compose up --build
-
+docker-compose up --build
 ```
 
-### 1️⃣ Docker Compose (Recomendado)A API estará em: `http://localhost:8080`
+### 2. Com Maven (Desenvolvimento Local)
+
+*Certifique-se de ter um PostgreSQL rodando localmente na porta `5432`.*
 
 ```bash
-
-docker-compose up --build### 2. Com Maven (Desenvolvimento Local)
-
-# Acesso: http://localhost:8080```bash
-
-```mvn clean spring-boot:run
-
+mvn clean spring-boot:run
 ```
 
-### 2️⃣ Maven LocalCertifique-se de ter PostgreSQL rodando localmente.
+### 3. Com Docker Hub
+
+Puxar e rodar a imagem mais recente já buildada.
 
 ```bash
-
-# Certifique-se de ter PostgreSQL rodando### 3. Com Docker Hub
-
-mvn clean spring-boot:run```bash
-
-```docker pull wesassis/checkpoint-api:latest
-
+docker pull wesassis/checkpoint-api:latest
 docker run -p 8080:8080 wesassis/checkpoint-api:latest
+```
 
-### 3️⃣ Docker Hub```
+## 📚 API (Swagger) & Endpoints
 
-```bash
+Acesse a documentação interativa do Swagger em:
+`http://localhost:8080/swagger-ui.html`
 
-docker pull wesassis/checkpoint-api:latest## 📚 API Swagger
+### Endpoints Principais
 
-docker run -p 8080:8080 wesassis/checkpoint-api:latest
+| Método | Endpoint | Descrição |
+| :--- | :--- | :--- |
+| `POST` | `/api/itens` | Criar um novo item |
+| `GET` | `/api/itens` | Listar todos os itens |
+| `GET` | `/api/itens/{id}` | Buscar um item por ID |
+| `PUT` | `/api/itens/{id}` | Atualizar um item por ID |
+| `DELETE` | `/api/itens/{id}` | Deletar um item por ID |
 
-```Acesse a documentação interativa em: `http://localhost:8080/swagger-ui.html`
+## 📝 Exemplos de Requisição (cURL)
 
-
-
-## 📚 Documentação## 🔌 Endpoints Principais
-
-
-
-**Swagger/OpenAPI:** http://localhost:8080/swagger-ui.html| Método | Endpoint | Descrição |
-
-|--------|----------|-----------|
-
-## 🔌 Endpoints CRUD| POST | `/api/itens` | Criar item |
-
-| GET | `/api/itens` | Listar itens |
-
-| Método | Endpoint | Descrição || GET | `/api/itens/{id}` | Buscar item |
-
-|--------|----------|-----------|| PUT | `/api/itens/{id}` | Atualizar item |
-
-| POST | `/api/itens` | Criar item || DELETE | `/api/itens/{id}` | Deletar item |
-
-| GET | `/api/itens` | Listar todos |
-
-| GET | `/api/itens/{id}` | Buscar por ID |## � Exemplos de Requisição
-
-| PUT | `/api/itens/{id}` | Atualizar |
-
-| DELETE | `/api/itens/{id}` | Deletar |### Criar um item
+### Criar um item
 
 ```bash
-
-## 📝 Exemplos de Requisiçãocurl -X POST http://localhost:8080/api/itens \
-
-  -H "Content-Type: application/json" \
-
-### Criar Item  -d '{"nome": "Meu Item", "descricao": "Descrição"}'
-
-```bash```
-
 curl -X POST http://localhost:8080/api/itens \
-
-  -H "Content-Type: application/json" \### Listar itens
-
-  -d '{"nome": "Meu Item", "descricao": "Descrição"}'```bash
-
-```curl http://localhost:8080/api/itens
-
+ -H "Content-Type: application/json" \
+ -d '{"nome": "Meu Item", "descricao": "Descrição"}'
 ```
 
-### Listar Todos
+### Listar itens
 
-```bash### Atualizar item
+```bash
+curl http://localhost:8080/api/itens
+```
 
-curl http://localhost:8080/api/itens```bash
+### Buscar item por ID (Ex: ID 1)
 
-```curl -X PUT http://localhost:8080/api/itens/1 \
-
-  -H "Content-Type: application/json" \
-
-### Buscar por ID  -d '{"nome": "Item Atualizado"}'
-
-```bash```
-
+```bash
 curl http://localhost:8080/api/itens/1
+```
 
-```### Deletar item
+### Atualizar item (Ex: ID 1)
 
 ```bash
-
-### Atualizarcurl -X DELETE http://localhost:8080/api/itens/1
-
-```bash```
-
 curl -X PUT http://localhost:8080/api/itens/1 \
+ -H "Content-Type: application/json" \
+ -d '{"nome": "Item Atualizado", "descricao": "Nova descrição"}'
+```
 
-  -H "Content-Type: application/json" \## 🧪 Testes
-
-  -d '{"nome": "Atualizado", "descricao": "Nova descrição"}'
-
-``````bash
-
-# Testes unitários
-
-### Deletarmvn test
+### Deletar item (Ex: ID 1)
 
 ```bash
-
-curl -X DELETE http://localhost:8080/api/itens/1# Testes de integração
-
-```mvn verify
-
+curl -X DELETE http://localhost:8080/api/itens/1
 ```
 
 ## 🧪 Testes
 
-## 🔄 CI/CD
-
 ### Testes Unitários
 
-```bashGitHub Actions workflows configurados para:
+```bash
+mvn test
+```
 
-mvn test- **CI**: Testes e build (branches: develop, feature, hotfix)
-
-```- **CD Upload**: Docker Hub (branch: main)
-
-- **Release**: Tags e releases (branch: main)
-
-### Testes de Integração- **Integration Tests**: Testes com Docker (branches: develop, main)
+### Testes de Integração
 
 ```bash
+mvn verify
+```
 
-mvn verify### Configurar Secrets
+## 🔄 CI/CD Pipeline (GitHub Actions)
 
-```Adicione no GitHub:
+### Workflows
 
-- `DOCKER_USERNAME`
+-   **ci.yml**: Roda testes e build em branches: `develop`, `feature/*`, `hotfix/*`
+-   **cd_upload.yml**: Faz upload da imagem Docker Hub em pushes para: `develop`, `main`, e em pull requests
+-   **release.yml**: Cria versionamento automático e releases na branch: `main`
+-   **cd\_integration\_test.yml**: Roda testes de integração com Docker em: `develop`, `main`
 
-## 📁 Estrutura- `DOCKER_PASSWORD`
+### Configuração de Secrets
 
+Adicione os seguintes secrets no repositório do GitHub (`Settings` > `Secrets and variables` > `Actions`):
 
+-   `DOCKER_USERNAME`: Seu nome de usuário do Docker Hub.
+-   `DOCKER_PASSWORD`: Seu token de acesso (password) do Docker Hub.
 
-```## 📋 Variáveis de Ambiente
+## 🐳 Configuração (Docker & Variáveis)
 
-src/
+### Docker Compose
 
-├── main/java/com/example/```properties
+Serviços definidos no `docker-compose.yml`:
 
-│   ├── CheckpointApiApplication.java    # Mainspring.datasource.url=jdbc:postgresql://db:5432/checkpoint_db
+-   **api**: A aplicação Spring Boot (porta `8080:8080`)
+-   **db**: O banco de dados PostgreSQL (porta `5432:5432`)
 
-│   ├── model/Item.java                  # Entityspring.datasource.username=checkpoint_user
+Credenciais padrão do banco de dados (usadas pelo `docker-compose`):
 
-│   ├── repository/ItemRepository.java   # JPA Repositoryspring.datasource.password=checkpoint_password
+-   **Database**: `checkpoint_db`
+-   **User**: `checkpoint_user`
+-   **Password**: `checkpoint_password`
 
-│   └── controller/ItemController.java   # REST Controller```
+### Variáveis de Ambiente (Produção)
 
-├── main/resources/
+Estas são as variáveis que a aplicação espera (são injetadas pelo `docker-compose`):
 
-│   ├── application.properties           # Config Produção## � Estrutura
-
-│   └── application-test.properties      # Config Teste
-
-└── test/java/com/example/```
-
-    └── controller/ItemControllerIntegrationTest.java├── .github/workflows/     # GitHub Actions
-
-```├── src/main/java/         # Código principal
-
-├── src/test/java/         # Testes
-
-## 🔄 CI/CD Pipeline├── Dockerfile             # Container
-
-├── docker-compose.yml     # Orquestração
-
-### Workflows GitHub Actions└── pom.xml               # Maven config
-
-- **ci.yml** - Testes e build em: `develop`, `feature/*`, `hotfix/*````
-
-- **cd_upload.yml** - Upload Docker Hub em: `develop`, `main`, pull requests
-
-- **release.yml** - Versionamento automático em: `main`## ⚙️ Tecnologias
-
-- **cd_integration_test.yml** - Testes de integração em: `develop`, `main`
-
-- Java 17+
-
-### Configurar GitHub Secrets- Spring Boot 3.2.0
-
-1. Vá para: `Settings` → `Secrets and variables` → `Actions`- PostgreSQL
-
-2. Adicione:- Docker
-
-   - `DOCKER_USERNAME` = seu usuário Docker Hub- Maven
-
-   - `DOCKER_PASSWORD` = seu token Docker Hub
-
-## 🐳 Docker Compose
-
-Serviços:
-- **api**: Aplicação Spring Boot (porta 8080)
-- **db**: PostgreSQL (porta 5432)
-
-Credenciais padrão:
-- User: `checkpoint_user`
-- Password: `checkpoint_password`
-- Database: `checkpoint_db`
-
-## ⚙️ Configuração
-
-### Variáveis de Ambiente (Production)
 ```properties
 SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/checkpoint_db
 SPRING_DATASOURCE_USERNAME=checkpoint_user
@@ -246,23 +148,38 @@ SPRING_JPA_HIBERNATE_DDL_AUTO=update
 ```
 
 ### Variáveis de Ambiente (Test)
+
+Para testes, a aplicação usa um banco H2 em memória (`application-test.properties`):
+
 ```properties
 SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb
 SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.H2Dialect
 ```
 
+## 📁 Estrutura do Projeto
+
+```
+.
+├── .github/workflows/    # GitHub Actions (CI/CD)
+├── src/main/java/        # Código principal da aplicação
+├── src/test/java/        # Testes unitários e de integração
+├── Dockerfile            # Definição do container da API
+├── docker-compose.yml    # Orquestração (API + Banco de Dados)
+└── pom.xml               # Dependências e build (Maven)
+```
+
 ## 🎓 Dependências Principais
 
-- Spring Boot Starter Web
-- Spring Data JPA
-- PostgreSQL Driver
-- Spring Boot Actuator
-- Springdoc OpenAPI (Swagger)
-- TestContainers
-- H2 Database (testes)
+-   Spring Boot Starter Web
+-   Spring Data JPA
+-   PostgreSQL Driver
+-   Spring Boot Actuator (Monitoramento)
+-   Springdoc OpenAPI (Swagger UI)
+-   TestContainers (Testes de integração)
+-   H2 Database (Testes unitários)
 
-## � Integrantes
+## 👥 Integrantes
 
-- **Pablo Rangel** - RM: 551548
-- **Guilherme Cavalcanti** - RM: 98928
-- **Wesley Assis** - RM: 552516
+-   **Pablo Rangel** - RM: 551548
+-   **Guilherme Cavalcanti** - RM: 98928
+-   **Wesley Assis** - RM: 552516
