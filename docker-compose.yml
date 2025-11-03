@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: checkpoint_db
+    environment:
+      POSTGRES_USER: checkpoint_user
+      POSTGRES_PASSWORD: checkpoint_password
+      POSTGRES_DB: checkpoint_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U checkpoint_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    container_name: checkpoint_api
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/checkpoint_db
+      SPRING_DATASOURCE_USERNAME: checkpoint_user
+      SPRING_DATASOURCE_PASSWORD: checkpoint_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
