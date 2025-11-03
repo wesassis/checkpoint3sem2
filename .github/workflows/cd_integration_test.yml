@@ -40,6 +40,12 @@ jobs:
           distribution: 'temurin'
           cache: maven
       
+      - name: Limpar cache Maven
+        run: mvn clean -DskipTests
+      
+      - name: Download dependências Maven
+        run: mvn dependency:resolve -DskipTests
+      
       - name: Build Maven
         run: mvn clean package -DskipTests
       
