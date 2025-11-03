@@ -39,15 +39,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+          cache-dependency-path: '**/pom.xml'
       
-      - name: Limpar cache Maven
-        run: mvn clean -DskipTests
+      - name: Limpar cache local Maven
+        run: rm -rf ~/.m2/repository
       
-      - name: Download dependências Maven
-        run: mvn dependency:resolve -DskipTests
-      
-      - name: Build Maven
-        run: mvn clean package -DskipTests
+      - name: Build Maven com resolução completa
+        run: mvn -U clean package -DskipTests -X 2>&1 | tail -100
       
       - name: Executar testes de integração
         env:
