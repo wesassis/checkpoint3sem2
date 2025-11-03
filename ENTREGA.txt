@@ -1,0 +1,14 @@
+# Entrega - Check Point 3/3º semestre/2025 - SOA e Microservices
+
+URL do repositório no GitHub:
+https://github.com/wesassis/checkpoint3sem2
+
+URL do repositório no Docker Hub:
+https://hub.docker.com/r/wwweeesss/checkpoint-api
+
+--------------------------------------------------
+
+Nomes dos membros do grupo:
+- Wesley Assis RM 552516
+- Pablo Rangel RM:551548
+- Guilherme Cavalcanti RM:98928
